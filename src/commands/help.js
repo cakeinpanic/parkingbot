@@ -3,10 +3,8 @@
 
 const _ = require('lodash')
 const config = require('../config')
-const slack = require('slack')
 
-
-let bot = slack.rtm.client()
+let slots = [];
 
 const msgDefaults = {
   response_type: 'in_channel',
@@ -30,24 +28,23 @@ let attachments = [
 ]
 
 const handler = (payload, res) => {
-  let msg = _.defaults({
-    channel: payload.channel_name,
-    text: '123'
-  }, msgDefaults)
 
-    slack.chat.postMessage({
-        token: config('SLACK_TOKEN'),
-        icon_emoji: config('ICON_EMOJI'),
-        channel: msg.channel,
-        username: 'Starbot',
-        text: '456'
-    }, ()=>{
-      console.log('success')
-    })
-  console.log(payload, res);
+  switch (payload.command) {
+      case '/setslots': slots = payload.text.replace(' ', '').split(','); break;
+      case '/addslot': slots.push(payload.text.replace(' ', '')); break;
+  }
+
+    let msg = _.defaults({
+        channel: payload.channel_name,
+        text: 'Список доступных мест: ' +slots.join(',')
+    }, msgDefaults);
+
+
+
   res.set('content-type', 'application/json')
   res.status(200).json(msg)
-  return
+
+    return;
 }
 
 module.exports = { pattern: /help/ig, handler: handler }
