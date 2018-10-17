@@ -14,7 +14,6 @@ bot.configureIncomingWebhook({ url: config('WEBHOOK_URL') })
 const msgDefaults = {
   response_type: 'in_channel',
   username: 'Starbot',
-  icon_emoji: config('ICON_EMOJI')
 }
 
 trending('javascript', (err, repos) => {
