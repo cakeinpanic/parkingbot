@@ -19,6 +19,7 @@ bot.message((msg) => {
     if (!changes) {
         return;
     }
+    console.log(msg)
     var freeSLots = SLOTS.getFreeSots();
     slack.chat.postMessage({
         token: config('SLACK_TOKEN'),
