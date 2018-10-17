@@ -13,9 +13,7 @@ bot.started((payload) => {
 
 bot.message((msg) => {
   if (!msg.user) return
-  // if (!_.includes(msg.text.match(/<@([A-Z0-9])+>/igm), `<@${this.self.id}>`)) {
-  //   return
-  // }
+
 
     console.log(msg)
   slack.chat.postMessage({

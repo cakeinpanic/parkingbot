@@ -4,7 +4,7 @@
 const _ = require('lodash')
 const config = require('../config')
 
-let slots = [];
+let SLOTS = [];
 
 const msgDefaults = {
   response_type: 'in_channel',
@@ -27,18 +27,46 @@ let attachments = [
   }
 ]
 
+function getSlotsFromMessage(text) {
+  const reg =/([\d.]+)/g;
+  let result = reg.exec(text);
+  let slots = [];
+  while(result) {
+    slots.push(result[0]);
+    result = reg.exec(text);
+  }
+  return slots;
+}
+
+function removeSlots(text) {
+    const slotsToRemove = getSlotsFromMessage(text);
+    slotsToRemove.forEach(slot=>{
+        SLOTS.splice(SLOTS.indexOf(slot),1);
+    })
+}
+
+function addSlots(text) {
+    const slotsToAdd = getSlotsFromMessage(text);
+    SLOTS = SLOTS.concat(slotsToAdd).filter((s,i) => SLOTS.indexOf(s) === i)
+}
+
 const handler = (payload, res) => {
 
   switch (payload.command) {
-      case '/setslots': slots = payload.text.replace(' ', '').split(','); break;
-      case '/addslot': slots.push(payload.text.replace(' ', '')); break;
+      case '/setslots': SLOTS = getSlotsFromMessage(payload.text); break;
+      case '/addslot': addSlots(payload.text); break;
+      case '/removeslot': removeSlots(payload.text); break;
   }
 
     let msg = _.defaults({
         channel: payload.channel_name,
-        text: 'Список доступных мест: ' +slots.join(',')
+        attachments: [ {
+            title: 'Список доступных мест обновлен',
+            color: '#2FA44F',
+            text:  SLOTS.join(', '),
+            mrkdwn_in: ['text']
+        }]
     }, msgDefaults);
-
 
 
   res.set('content-type', 'application/json')
