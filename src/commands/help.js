@@ -16,6 +16,7 @@ const msgDefaults = {
 }
 
 const handler = (payload, res) => {
+
     if (payload.command === '/howtopark') {
         var attachments =  [
             {
@@ -26,6 +27,10 @@ const handler = (payload, res) => {
             }
         ];
         sendMessage(payload, res, attachments);
+        return;
+    }
+
+    if(payload.channel_name === 'directmessage') {
         return;
     }
 

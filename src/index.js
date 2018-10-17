@@ -52,3 +52,9 @@ app.listen(config('PORT'), (err) => {
     bot.listen({ token: config('SLACK_TOKEN') })
   }
 })
+
+var http = require("http");
+setInterval(function() {
+    http.get("http://cakeinpanictest.herokuapp.com");
+    console.log('ping')
+}, 300000);

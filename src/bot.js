@@ -6,20 +6,28 @@ const config = require('./config')
 const SLOTS = require('./slots');
 
 let bot = slack.rtm.client()
-
+let CHANNELS = [];
 bot.started((payload) => {
-    this.self = payload.self
-})
+    this.self = payload.self;
+    slack.channels.list({token: config('SLACK_TOKEN')}, (err, data) => {CHANNELS = data.channels.map((channel) => channel.id)})
 
+});
+
+function isItChannel(msg) {
+    return CHANNELS.indexOf(msg.channel) > -1;
+}
 
 bot.message((msg) => {
-    if (!msg.user || msg.text.indexOf('/') === 0) return;
+    if (!isItChannel(msg) || !msg.user || msg.text.indexOf('/') === 0) {
+        return;
+    }
 
     const changes = SLOTS.takeOrRemoveSlot(msg.text);
+
     if (!changes) {
         return;
     }
-    console.log(msg)
+
     var freeSLots = SLOTS.getFreeSots();
     slack.chat.postMessage({
         token: config('SLACK_TOKEN'),
@@ -41,4 +49,4 @@ bot.message((msg) => {
     })
 });
 
-module.exports = bot
+module.exports = bot;
