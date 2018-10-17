@@ -31,6 +31,14 @@ const handler = (payload, res) => {
     }
 
     if(payload.channel_name === 'directmessage') {
+
+        sendMessage(payload, res,  [
+            {
+                title: 'Я рожден только для работы в каналах, тут доступен только /howtopark',
+                color: config('ALL_TAKEN_COLOR'),
+                mrkdwn_in: ['text']
+            }
+        ]);
         return;
     }
 
