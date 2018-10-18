@@ -12,6 +12,7 @@ let LAST_CHANNEL = null;
 let bot = slack.rtm.client();
 let CHANNELS = [];
 
+let MASTER_CHANNEL = config('MASTER_CHANNEL');
 const msgDefaults = {
     token: config('SLACK_TOKEN'),
     username: 'parkingbot',
@@ -34,7 +35,8 @@ bot.message(msg => {
     if (!msg.user || msg.text.indexOf('/') === 0) {
         return;
     }
-    console.log(msg)
+    console.log(msg);
+    handleError('hello', msg)
     if (!isItChannel(msg)) {
         slack.chat.postMessage(
             _.defaults(
@@ -44,9 +46,7 @@ bot.message(msg => {
                 },
                 msgDefaults
             ),
-            (err) => {
-                if (err) throw err;
-            });
+            (e) => handleError(e, msg));
         return;
     }
 
@@ -72,19 +72,14 @@ bot.message(msg => {
                 ])
             },
             msgDefaults
-        ),
-        (err, data) => {
-            if (err) throw err;
-
-            let txt = _.truncate(data.message.text);
-
-            console.log(`🤖  beep boop: I responded with "${txt}"`);
-        }
+        ), (e) => handleError(e, msg)
     );
-});
+
+})
+;
 
 function startPing() {
-    setInterval(function() {
+    setInterval(function () {
         http.get('http://cakeinpanictest.herokuapp.com');
         console.log('ping');
         const hours = new Date().getUTCHours();
@@ -106,13 +101,26 @@ function startPing() {
                         },
                         msgDefaults
                     ),
-                    err => {
-                        if (err) throw err;
-                    }
+                    (e) => handleError(e, msg)
                 );
             }
         }
     }, 300000);
+}
+
+function handleError(error, message) {
+    if (error && MASTER_CHANNEL) {
+        slack.chat.postMessage(
+            _.defaults(
+                {
+                    channel: MASTER_CHANNEL,
+                    text: `error: ${error}, message: ${JSON.stringify(message)}`
+                },
+                msgDefaults
+            ),
+            _.noop
+        );
+    }
 }
 
 module.exports = {bot, startPing};
