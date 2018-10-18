@@ -41,6 +41,10 @@ function slotsHandler() {
         return this.FREE_SLOTS.sort();
     }
 
+    this.resetFreeSLOTS = ()=>{
+        this.FREE_SLOTS = [].concat(this.SLOTS);
+    }
+
     this.takeOrRemoveSlot = (text) => {
         var addFreeSlot = getSlotsFromMessage(text, /-([\d.]+)/g);
         var removeFreeSlot =  _.pullAll(getSlotsFromMessage(text), addFreeSlot);
