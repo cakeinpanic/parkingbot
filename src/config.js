@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
-const dotenv = require('dotenv')
-const ENV = process.env.NODE_ENV || 'development'
+const dotenv = require('dotenv');
+const ENV = process.env.NODE_ENV || 'development';
 
-if (ENV === 'development') dotenv.load()
+if (ENV === 'development') dotenv.load();
 
 const config = {
     ENV: process.env.NODE_ENV,
@@ -15,10 +15,10 @@ const config = {
     ADD_COLOR: '#608fa4',
     FREE_COLOR: '#2FA44F',
     ALL_TAKEN_COLOR: '#a42823'
-}
+};
 
-module.exports = (key) => {
-    if (!key) return config
+module.exports = key => {
+    if (!key) return config;
 
-    return config[key]
-}
+    return config[key];
+};

@@ -1,11 +1,11 @@
-'use strict'
+'use strict';
 
-const _ = require('lodash')
-const config = require('../config')
+const _ = require('lodash');
+const config = require('../config');
 
 const SLOTS = require('../slots');
 
-const PRIVATE_RESPONSE =  [
+const PRIVATE_RESPONSE = [
     {
         title: 'Я рожден для работы в каналах, тут доступен только /howtopark и /slotsinfo',
         color: config('ALL_TAKEN_COLOR'),
@@ -23,12 +23,12 @@ const help = `*/setslots* – полностью перезаписать дос
 
 const msgDefaults = {
     response_type: 'in_channel'
-}
+};
 
 const handler = (payload, res) => {
-    console.log(payload)
+    console.log(payload);
     if (payload.command === '/howtopark') {
-        var attachments =  [
+        var attachments = [
             {
                 title: 'Инструкция по парковке :blue_car:',
                 color: config('ADD_COLOR'),
@@ -41,7 +41,7 @@ const handler = (payload, res) => {
     }
 
     if (payload.command === '/slotsinfo') {
-        sendMessage(payload, res,  [
+        sendMessage(payload, res, [
             {
                 title: 'Доступные места: ' + SLOTS.getAllSots().join(', '),
                 color: config('ADD_COLOR'),
@@ -56,9 +56,7 @@ const handler = (payload, res) => {
         return;
     }
 
-
-    if(payload.channel_name === 'directmessage') {
-
+    if (payload.channel_name === 'directmessage') {
         sendMessage(payload, res, PRIVATE_RESPONSE);
         return;
     }
@@ -75,7 +73,7 @@ const handler = (payload, res) => {
             break;
     }
 
-    sendMessage(payload, res,  [
+    sendMessage(payload, res, [
         {
             title: 'Список доступных мест обновлен: ' + SLOTS.getAllSots().join(', '),
             color: config('ADD_COLOR'),
@@ -87,17 +85,19 @@ const handler = (payload, res) => {
             mrkdwn_in: ['text']
         }
     ]);
-
-}
+};
 
 function sendMessage(payload, res, attachments) {
-    let msg = _.defaults({
-        channel: payload.channel_name,
-        attachments
-    }, msgDefaults);
+    let msg = _.defaults(
+        {
+            channel: payload.channel_name,
+            attachments
+        },
+        msgDefaults
+    );
 
-    res.set('content-type', 'application/json')
-    res.status(200).json(msg)
-
+    res.set('content-type', 'application/json');
+    res.status(200).json(msg);
 }
-module.exports = {pattern: /help/ig, handler: handler, PRIVATE_RESPONSE:PRIVATE_RESPONSE}
+
+module.exports = {pattern: /help/gi, handler: handler, PRIVATE_RESPONSE: PRIVATE_RESPONSE};
