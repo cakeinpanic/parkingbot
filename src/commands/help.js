@@ -7,7 +7,7 @@ const SLOTS = require('../slots');
 
 const PRIVATE_RESPONSE =  [
     {
-        title: 'Я рожден  для работы в каналах, тут доступен только /howtopark',
+        title: 'Я рожден для работы в каналах, тут доступен только /howtopark и /slotsinfo',
         color: config('ALL_TAKEN_COLOR'),
         mrkdwn_in: ['text']
     }
@@ -16,17 +16,17 @@ const PRIVATE_RESPONSE =  [
 const help = `*/setslots* – полностью перезаписать доступные места
 */addslots* – добавить доступные места 
 */removeslots* – убрать доступные места 
-Чтобы занять место, просто укажите его номер, чтобы освободить – номер с минусом
-
+*/slotsinfo* – текущее состояние мест
+Чтобы занять место, просто напишите в канал его номер, чтобы освободить – номер с минусом
 Номер места вычисляется по регулярному выражению из цифр и точек.
-Каждый день в полночь писок свободных мест обновляется`;
+Каждый день в полночь писок свободных мест обновляется.`;
 
 const msgDefaults = {
     response_type: 'in_channel'
 }
 
 const handler = (payload, res) => {
-        console.log(payload)
+    console.log(payload)
     if (payload.command === '/howtopark') {
         var attachments =  [
             {
@@ -39,6 +39,23 @@ const handler = (payload, res) => {
         sendMessage(payload, res, attachments);
         return;
     }
+
+    if (payload.command === '/slotsinfo') {
+        sendMessage(payload, res,  [
+            {
+                title: 'Доступные места: ' + SLOTS.getAllSots().join(', '),
+                color: config('ADD_COLOR'),
+                mrkdwn_in: ['text']
+            },
+            {
+                title: 'Свободные места: ' + SLOTS.getFreeSots().join(', '),
+                color: config('FREE_COLOR'),
+                mrkdwn_in: ['text']
+            }
+        ]);
+        return;
+    }
+
 
     if(payload.channel_name === 'directmessage') {
 

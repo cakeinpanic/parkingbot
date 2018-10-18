@@ -73,7 +73,7 @@ function startPing() {
         http.get("http://cakeinpanictest.herokuapp.com");
         console.log('ping');
         const hours = new Date().getUTCHours();
-        const minutes = new Date().getUTCMinutes();
+
         // in Russia its GMT+3
         if (hours === 20) {
             if (SLOTS.resetFreeSLOTS() && LAST_CHANNEL) {
