@@ -8,7 +8,7 @@ const PRIVATE_RESPONSE = require('./commands/help').PRIVATE_RESPONSE;
 
 var http = require('http');
 
-let LAST_CHANNEL = null;
+let LAST_CHANNEL = config('MAIN_CHANNEL');
 let bot = slack.rtm.client();
 let CHANNELS = [];
 
@@ -32,10 +32,11 @@ function isItChannel(msg) {
 }
 
 bot.message(msg => {
+    console.log(msg);
+
     if (!msg.user || msg.text.indexOf('/') === 0) {
         return;
     }
-    console.log(msg);
 
     if (!isItChannel(msg)) {
         slack.chat.postMessage(
@@ -81,8 +82,10 @@ bot.message(msg => {
 function startPing() {
     setInterval(function () {
         http.get('http://cakeinpanictest.herokuapp.com');
-        console.log('ping');
+
         const hours = new Date().getUTCHours();
+
+        console.log('ping ', hours);
 
         // in Russia its GMT+3
         if (hours === 20) {
