@@ -9,7 +9,7 @@
     "test": "standard",
     "prettier": "prettier --write 'src/**/*.js'"
   },
-  "lint-staged": {
+  "pre-commit": {
     "*.ts": [
       "prettier --write",
       "git add"
