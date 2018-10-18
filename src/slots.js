@@ -1,4 +1,5 @@
 var _ = require('lodash');
+const config = require('./config');
 
 getSlotsFromMessage = (text, reg) => {
     reg = reg || /([\d.]+)/g;
@@ -12,8 +13,8 @@ getSlotsFromMessage = (text, reg) => {
 };
 
 function slotsHandler() {
-    this.SLOTS = [];
-    this.FREE_SLOTS = [];
+    this.SLOTS = config('SLOTS_PRESET') ? config('SLOTS_PRESET').split(',') : [];
+    this.FREE_SLOTS = config('TAKEN_PRESET') ? _.difference(this.SLOTS, config('TAKEN_PRESET').split(',')) : this.SLOTS;
 
     this.removeSlots = text => {
         var slotsToRemove = getSlotsFromMessage(text);

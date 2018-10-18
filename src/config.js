@@ -14,7 +14,9 @@ const config = {
     SLACK_TOKEN: process.env.SLACK_TOKEN,
     ADD_COLOR: '#608fa4',
     FREE_COLOR: '#2FA44F',
-    ALL_TAKEN_COLOR: '#a42823'
+    ALL_TAKEN_COLOR: '#a42823',
+    TAKEN_PRESET: process.env.TAKEN_PRESET,
+    SLOTS_PRESET: process.env.SLOTS_PRESET
 };
 
 module.exports = key => {
