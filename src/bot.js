@@ -34,7 +34,7 @@ bot.message(msg => {
     if (!msg.user || msg.text.indexOf('/') === 0) {
         return;
     }
-
+    console.log(msg)
     if (!isItChannel(msg)) {
         slack.chat.postMessage(
             _.defaults(
@@ -43,8 +43,10 @@ bot.message(msg => {
                     attachments: JSON.stringify(PRIVATE_RESPONSE)
                 },
                 msgDefaults
-            )
-        );
+            ),
+            (err) => {
+                if (err) throw err;
+            });
         return;
     }
 

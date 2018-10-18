@@ -16,7 +16,8 @@ const config = {
     FREE_COLOR: '#2FA44F',
     ALL_TAKEN_COLOR: '#a42823',
     TAKEN_PRESET: process.env.TAKEN_PRESET,
-    SLOTS_PRESET: process.env.SLOTS_PRESET
+    SLOTS_PRESET: process.env.SLOTS_PRESET,
+    MASTER_UID: process.env.SLOTS_PRESET
 };
 
 module.exports = key => {
