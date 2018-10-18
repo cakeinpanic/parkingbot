@@ -1,3 +1,10 @@
+Необходимо предоставить в node_env конфиги:
+* STARBOT_COMMAND_TOKEN: токен для slash-команд
+* SLACK_TOKEN: токен для бота слака, [optional]
+* TAKEN_PRESET:  по дефолту занятые места, [optional]
+* SLOTS_PRESET: по дефолту доступные места, [optional]
+* MASTER_CHANNEL: id канала, куда бот будет писать об ошибках [optional]
+
 # 🌟 Starbot
 
 ![Starbot](https://heroku-www-files.s3.amazonaws.com/starbot/starbot-banner.png)

@@ -36,7 +36,7 @@ bot.message(msg => {
         return;
     }
     console.log(msg);
-    handleError('hello', msg)
+
     if (!isItChannel(msg)) {
         slack.chat.postMessage(
             _.defaults(
