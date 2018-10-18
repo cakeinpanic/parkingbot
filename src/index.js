@@ -10,7 +10,8 @@ const commands = require('./commands')
 const helpCommand = require('./commands/help')
 const SLOTS = require('./slots');
 
-let bot = require('./bot')
+let bot = require('./bot').bot;
+let startPing = require('./bot').startPing;
 
 let app = express()
 
@@ -54,14 +55,5 @@ app.listen(config('PORT'), (err) => {
   }
 })
 
-var http = require("http");
 
-setInterval(function() {
-    http.get("http://cakeinpanictest.herokuapp.com");
-    console.log('ping');
-    const hours = new Date().getUTCHours();
-    // in Russia its GMT+3
-    if(hours === 20) {
-      SLOTS.resetFreeSLOTS()
-    })
-}, 300000);
+startPing();

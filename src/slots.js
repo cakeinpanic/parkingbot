@@ -42,12 +42,18 @@ function slotsHandler() {
     }
 
     this.resetFreeSLOTS = ()=>{
-        this.FREE_SLOTS = [].concat(this.SLOTS);
+        if(this.FREE_SLOTS.length!== this.SLOTS.length) {
+            this.FREE_SLOTS = [].concat(this.SLOTS);
+            return true;
+        }
+        return false;
     }
 
     this.takeOrRemoveSlot = (text) => {
         var addFreeSlot = getSlotsFromMessage(text, /-([\d.]+)/g);
         var removeFreeSlot =  _.pullAll(getSlotsFromMessage(text), addFreeSlot);
+        console.log(this.FREE_SLOTS)
+        console.log('add', addFreeSlot, 'remove', removeFreeSlot)
         _.pullAll(this.FREE_SLOTS, removeFreeSlot);
         this.FREE_SLOTS = _.uniq(this.FREE_SLOTS.concat(_.intersection(addFreeSlot, this.SLOTS)));
 

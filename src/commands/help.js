@@ -5,10 +5,20 @@ const config = require('../config')
 
 const SLOTS = require('../slots');
 
-const help = `/setslots – полностью перезаписать доступные места
-/addslots – добавить доступные места 
-/removeslots – убрать доступные места 
-Чтобы занять место, просто укажите его номер, чтобы освободить – номер с минусом.
+const PRIVATE_RESPONSE =  [
+    {
+        title: 'Я рожден  для работы в каналах, тут доступен только /howtopark',
+        color: config('ALL_TAKEN_COLOR'),
+        mrkdwn_in: ['text']
+    }
+];
+
+const help = `*/setslots* – полностью перезаписать доступные места
+*/addslots* – добавить доступные места 
+*/removeslots* – убрать доступные места 
+Чтобы занять место, просто укажите его номер, чтобы освободить – номер с минусом
+
+Номер места вычисляется по регулярному выражению из цифр и точек.
 Каждый день в полночь писок свободных мест обновляется`;
 
 const msgDefaults = {
@@ -16,7 +26,7 @@ const msgDefaults = {
 }
 
 const handler = (payload, res) => {
-
+        console.log(payload)
     if (payload.command === '/howtopark') {
         var attachments =  [
             {
@@ -32,13 +42,7 @@ const handler = (payload, res) => {
 
     if(payload.channel_name === 'directmessage') {
 
-        sendMessage(payload, res,  [
-            {
-                title: 'Я рожден только для работы в каналах, тут доступен только /howtopark',
-                color: config('ALL_TAKEN_COLOR'),
-                mrkdwn_in: ['text']
-            }
-        ]);
+        sendMessage(payload, res, PRIVATE_RESPONSE);
         return;
     }
 
@@ -79,4 +83,4 @@ function sendMessage(payload, res, attachments) {
     res.status(200).json(msg)
 
 }
-module.exports = {pattern: /help/ig, handler: handler}
+module.exports = {pattern: /help/ig, handler: handler, PRIVATE_RESPONSE:PRIVATE_RESPONSE}
