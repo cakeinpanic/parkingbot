@@ -81,7 +81,7 @@ bot.message(msg => {
 
 function startPing() {
     setInterval(function () {
-        http.get('http://cakeinpanictest.herokuapp.com');
+        http.get('http://tinkoffparkingbot.herokuapp.com');
 
         const hours = new Date().getUTCHours();
 
