@@ -43,12 +43,12 @@ const handler = (payload, res) => {
     if (payload.command === '/slotsinfo') {
         sendMessage(payload, res, [
             {
-                title: 'Доступные места: ' + SLOTS.getAllSots().join(', '),
+                text: 'Доступные места: ' + SLOTS.getAllSots().join(', '),
                 color: config('ADD_COLOR'),
                 mrkdwn_in: ['text']
             },
             {
-                title: 'Свободные места: ' + SLOTS.getFreeSots().join(', '),
+                text: 'Свободные места: ' + SLOTS.getFreeSots().join(', '),
                 color: config('FREE_COLOR'),
                 mrkdwn_in: ['text']
             }
@@ -75,12 +75,12 @@ const handler = (payload, res) => {
 
     sendMessage(payload, res, [
         {
-            title: 'Список доступных мест обновлен: ' + SLOTS.getAllSots().join(', '),
+            text: 'Список доступных мест обновлен: ' + SLOTS.getAllSots().join(', '),
             color: config('ADD_COLOR'),
             mrkdwn_in: ['text']
         },
         {
-            title: 'Свободные места: ' + SLOTS.getFreeSots().join(', '),
+            text: 'Свободные места: ' + SLOTS.getFreeSots().join(', '),
             color: config('FREE_COLOR'),
             mrkdwn_in: ['text']
         }

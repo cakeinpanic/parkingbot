@@ -11,6 +11,8 @@ let bot = slack.rtm.client();
 
 let PING_URL = config('PING_URL');
 let CHANNELS = [];
+let lastMessage;
+
 const msgDefaults = {
     token: config('SLACK_TOKEN'),
     username: 'parkingbot',
@@ -29,8 +31,17 @@ function isItChannel(msg) {
     return CHANNELS.indexOf(msg.channel) > -1;
 }
 
+function isItStatusMessage(msg) {
+    // хак-костыль: название бота посылаем только в сообщении "места заняты", а когда послылаем другие сообщеня – не приписываем его
+    return msg.subtype === 'bot_message' && msg.username === 'parkingbot';
+}
+
 bot.message(msg => {
-    console.log(msg);
+    console.log(msg)
+
+    if (isItStatusMessage(msg) && isItChannel(msg)) {
+        lastMessage = msg;
+    }
 
     if (msg.subtype === 'message_replied'
         || msg.subtype === 'message_changed'
@@ -52,6 +63,7 @@ bot.message(msg => {
         return;
     }
 
+
     const changes = SLOTS.takeOrRemoveSlot(msg.text);
 
     if (!changes) {
@@ -66,7 +78,7 @@ bot.message(msg => {
                 channel: msg.channel,
                 attachments: JSON.stringify([
                     {
-                        title: freeSLots.length ? `Свободные места ${freeSLots.join(', ')}` : 'Свободных мест нет',
+                        text: freeSLots.length ? `Свободные места ${freeSLots.join(', ')}` : 'Свободных мест нет',
                         color: freeSLots.length ? config('FREE_COLOR') : config('ALL_TAKEN_COLOR'),
                         mrkdwn_in: ['text']
                     }
@@ -75,6 +87,16 @@ bot.message(msg => {
             msgDefaults
         ), _.noop
     );
+
+
+    if (!!lastMessage) {
+        slack.chat.delete(
+            {
+                token: config('SLACK_TOKEN'),
+                channel: msg.channel,
+                ts: lastMessage.ts
+            }, _.noop);
+    }
 
 })
 ;
