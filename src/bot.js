@@ -12,7 +12,7 @@ let LAST_CHANNEL = config('MAIN_CHANNEL');
 let bot = slack.rtm.client();
 let CHANNELS = [];
 
-let MASTER_CHANNEL = config('MASTER_CHANNEL');
+let PING_URL = config('PING_URL');
 const msgDefaults = {
     token: config('SLACK_TOKEN'),
     username: 'parkingbot',
@@ -73,7 +73,7 @@ bot.message(msg => {
                 ])
             },
             msgDefaults
-        ), (e) => handleError(e, msg)
+        )
     );
 
 })
@@ -81,49 +81,17 @@ bot.message(msg => {
 
 function startPing() {
     setInterval(function () {
-        http.get('http://tinkoffparkingbot.herokuapp.com');
+        http.get(PING_URL);
 
         const hours = new Date().getUTCHours();
 
         console.log('ping ', hours);
 
         // in Russia its GMT+3
-        if (hours === 20) {
-            if (SLOTS.resetFreeSLOTS() && LAST_CHANNEL) {
-                slack.chat.postMessage(
-                    _.defaults(
-                        {
-                            channel: LAST_CHANNEL,
-                            attachments: JSON.stringify([
-                                {
-                                    title: `Занятые места сброшены. Свободные места ${SLOTS.getFreeSots().join(', ')}`,
-                                    color: config('FREE_COLOR'),
-                                    mrkdwn_in: ['text']
-                                }
-                            ])
-                        },
-                        msgDefaults
-                    ),
-                    (e) => handleError(e, msg)
-                );
-            }
+        if (hours === 21) {
+            SLOTS.resetFreeSLOTS();
         }
     }, 300000);
-}
-
-function handleError(error, message) {
-    if (error && MASTER_CHANNEL) {
-        slack.chat.postMessage(
-            _.defaults(
-                {
-                    channel: MASTER_CHANNEL,
-                    text: `error: ${error}, message: ${JSON.stringify(message)}`
-                },
-                msgDefaults
-            ),
-            _.noop
-        );
-    }
 }
 
 module.exports = {bot, startPing};

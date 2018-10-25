@@ -17,8 +17,8 @@ const config = {
     ALL_TAKEN_COLOR: '#a42823',
     TAKEN_PRESET: process.env.TAKEN_PRESET,
     SLOTS_PRESET: process.env.SLOTS_PRESET,
-    MASTER_CHANNEL: process.env.MASTER_CHANNEL,
-    MAIN_CHANNEL: process.env.MAIN_CHANNEL,
+    PING_URL: process.env.PING_URL,
+    MAIN_CHANNEL: process.env.MAIN_CHANNEL
 };
 
 module.exports = key => {
