@@ -57,12 +57,13 @@ function slotsHandler() {
     this.takeOrRemoveSlot = text => {
         var addFreeSlot = getSlotsFromMessage(text, FREE_SLOT_REG);
         var removeFreeSlot = _.pullAll(getSlotsFromMessage(text), addFreeSlot);
+        var last = _.clone(this.FREE_SLOTS);
         // console.log(this.FREE_SLOTS);
         // console.log('add', addFreeSlot, 'remove', removeFreeSlot);
         _.pullAll(this.FREE_SLOTS, removeFreeSlot);
         this.FREE_SLOTS = _.uniq(this.FREE_SLOTS.concat(_.intersection(addFreeSlot, this.SLOTS)));
 
-        return removeFreeSlot.length || addFreeSlot.length;
+        return !_.isEqual(last, this.FREE_SLOTS)
     };
 }
 

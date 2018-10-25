@@ -37,15 +37,22 @@ function isItStatusMessage(msg) {
 }
 
 bot.message(msg => {
+
+
+    if (msg.subtype === 'message_replied'
+        || !!msg.thread_ts
+        || msg.subtype === 'message_changed'
+        || msg.subtype === 'message_deleted') {
+        return;
+    }
+
     console.log(msg)
 
     if (isItStatusMessage(msg) && isItChannel(msg)) {
         lastMessage = msg;
     }
 
-    if (msg.subtype === 'message_replied'
-        || msg.subtype === 'message_changed'
-        || !msg.user
+    if (!msg.user
         || msg.text.indexOf('/') === 0) {
         return;
     }
