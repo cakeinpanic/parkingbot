@@ -1,8 +1,12 @@
 var _ = require('lodash');
 const config = require('./config');
 
+
+const SLOT_REG = /(\d+\.?\d*)/g;
+const FREE_SLOT_REG = /-(\d+\.?\d*)/g;
+
 getSlotsFromMessage = (text, reg) => {
-    reg = reg || /([\d.]+)/g;
+    reg = reg || SLOT_REG;
     var result = reg.exec(text);
     var slots = [];
     while (result) {
@@ -51,7 +55,7 @@ function slotsHandler() {
     };
 
     this.takeOrRemoveSlot = text => {
-        var addFreeSlot = getSlotsFromMessage(text, /-([\d.]+)/g);
+        var addFreeSlot = getSlotsFromMessage(text, FREE_SLOT_REG);
         var removeFreeSlot = _.pullAll(getSlotsFromMessage(text), addFreeSlot);
         console.log(this.FREE_SLOTS);
         console.log('add', addFreeSlot, 'remove', removeFreeSlot);

@@ -7,12 +7,10 @@ const SLOTS = require('./slots');
 const PRIVATE_RESPONSE = require('./commands/help').PRIVATE_RESPONSE;
 
 var http = require('http');
-
-let LAST_CHANNEL = config('MAIN_CHANNEL');
 let bot = slack.rtm.client();
-let CHANNELS = [];
 
 let PING_URL = config('PING_URL');
+let CHANNELS = [];
 const msgDefaults = {
     token: config('SLACK_TOKEN'),
     username: 'parkingbot',
@@ -34,7 +32,10 @@ function isItChannel(msg) {
 bot.message(msg => {
     console.log(msg);
 
-    if (!msg.user || msg.text.indexOf('/') === 0) {
+    if (msg.subtype === 'message_replied'
+        || msg.subtype === 'message_changed'
+        || !msg.user
+        || msg.text.indexOf('/') === 0) {
         return;
     }
 
@@ -47,7 +48,7 @@ bot.message(msg => {
                 },
                 msgDefaults
             ),
-            (e) => handleError(e, msg));
+            _.noop);
         return;
     }
 
@@ -58,7 +59,6 @@ bot.message(msg => {
     }
 
     var freeSLots = SLOTS.getFreeSots();
-    LAST_CHANNEL = msg.channel;
 
     slack.chat.postMessage(
         _.defaults(
@@ -73,7 +73,7 @@ bot.message(msg => {
                 ])
             },
             msgDefaults
-        )
+        ), _.noop
     );
 
 })
