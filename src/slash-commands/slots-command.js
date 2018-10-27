@@ -3,17 +3,17 @@
 const _ = require('lodash');
 const config = require('../config');
 
-const SLOTS = require('../slots');
+const SlotsCommand = require('../slots-store');
 
 const PRIVATE_RESPONSE = [
     {
         title: 'Я рожден для работы в каналах, тут доступен только /howtopark и /slotsinfo',
-        color: config('ALL_TAKEN_COLOR'),
+        color: config.ALL_TAKEN_COLOR,
         mrkdwn_in: ['text']
     }
 ];
 
-const help = `*/setslots* – полностью перезаписать доступные места
+const slots = `*/setslots* – полностью перезаписать доступные места
 */addslots* – добавить доступные места 
 */removeslots* – убрать доступные места 
 */slotsinfo* – текущее состояние мест
@@ -28,11 +28,11 @@ const msgDefaults = {
 const handler = (payload, res) => {
     console.log(payload);
     if (payload.command === '/howtopark') {
-        var attachments = [
+        let attachments = [
             {
                 title: 'Инструкция по парковке :blue_car:',
-                color: config('ADD_COLOR'),
-                text: help,
+                color: config.ADD_COLOR,
+                text: slots,
                 mrkdwn_in: ['text']
             }
         ];
@@ -43,13 +43,13 @@ const handler = (payload, res) => {
     if (payload.command === '/slotsinfo') {
         sendMessage(payload, res, [
             {
-                text: 'Доступные места: ' + SLOTS.getAllSots().join(', '),
-                color: config('ADD_COLOR'),
+                text: 'Доступные места: ' + SlotsCommand.getAllSots().join(', '),
+                color: config.ADD_COLOR,
                 mrkdwn_in: ['text']
             },
             {
-                text: 'Свободные места: ' + SLOTS.getFreeSots().join(', '),
-                color: config('FREE_COLOR'),
+                text: 'Свободные места: ' + SlotsCommand.getFreeSots().join(', '),
+                color: config.FREE_COLOR,
                 mrkdwn_in: ['text']
             }
         ]);
@@ -63,25 +63,25 @@ const handler = (payload, res) => {
 
     switch (payload.command) {
         case '/setslots':
-            SLOTS.setSlots(payload.text);
+            SlotsCommand.setSlots(payload.text);
             break;
         case '/addslots':
-            SLOTS.addSlots(payload.text);
+            SlotsCommand.addSlots(payload.text);
             break;
         case '/removeslots':
-            SLOTS.removeSlots(payload.text);
+            SlotsCommand.removeSlots(payload.text);
             break;
     }
 
     sendMessage(payload, res, [
         {
-            text: 'Список доступных мест обновлен: ' + SLOTS.getAllSots().join(', '),
-            color: config('ADD_COLOR'),
+            text: 'Список доступных мест обновлен: ' + SlotsCommand.getAllSots().join(', '),
+            color: config.ADD_COLOR,
             mrkdwn_in: ['text']
         },
         {
-            text: 'Свободные места: ' + SLOTS.getFreeSots().join(', '),
-            color: config('FREE_COLOR'),
+            text: 'Свободные места: ' + SlotsCommand.getFreeSots().join(', '),
+            color: config.FREE_COLOR,
             mrkdwn_in: ['text']
         }
     ]);
@@ -100,4 +100,4 @@ function sendMessage(payload, res, attachments) {
     res.status(200).json(msg);
 }
 
-module.exports = {pattern: /help/gi, handler: handler, PRIVATE_RESPONSE: PRIVATE_RESPONSE};
+module.exports = {handler: handler, PRIVATE_RESPONSE: PRIVATE_RESPONSE};

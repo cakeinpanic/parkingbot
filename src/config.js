@@ -3,7 +3,9 @@
 const dotenv = require('dotenv');
 const ENV = process.env.NODE_ENV || 'development';
 
-if (ENV === 'development') dotenv.load();
+if (ENV === 'development') {
+    dotenv.load();
+}
 
 const config = {
     ENV: process.env.NODE_ENV,
@@ -12,6 +14,7 @@ const config = {
     WEBHOOK_URL: process.env.WEBHOOK_URL,
     STARBOT_COMMAND_TOKEN: process.env.STARBOT_COMMAND_TOKEN,
     SLACK_TOKEN: process.env.SLACK_TOKEN,
+
     ADD_COLOR: '#608fa4',
     FREE_COLOR: '#2FA44F',
     ALL_TAKEN_COLOR: '#a42823',
@@ -21,8 +24,4 @@ const config = {
     MAIN_CHANNEL: process.env.MAIN_CHANNEL
 };
 
-module.exports = key => {
-    if (!key) return config;
-
-    return config[key];
-};
+module.exports = config;

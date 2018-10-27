@@ -2,13 +2,16 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const _ = require('lodash');
 const config = require('./config');
-const commands = require('./commands');
-const helpCommand = require('./commands/help');
+const helpCommand = require('./slash-commands/slots-command').handler;
 
-let bot = require('./bot').bot;
-let startPing = require('./bot').startPing;
+let handleMessage = require('./bot-logic/bot');
+let startPing = require('./ping');
+
+const slack = require('slack');
+let bot = slack.rtm.client();
+
+bot.message(handleMessage);
 
 let app = express();
 
@@ -22,29 +25,21 @@ app.get('/', (req, res) => {
 app.post('/commands/starbot', (req, res) => {
     let payload = req.body;
 
-    if (!payload || payload.token !== config('STARBOT_COMMAND_TOKEN')) {
+    if (!payload || payload.token !== config.STARBOT_COMMAND_TOKEN) {
         return;
     }
 
-    let cmd = _.reduce(
-        commands,
-        (a, cmd) => {
-            return payload.text.match(cmd.pattern) ? cmd : a;
-        },
-        helpCommand
-    );
-
-    cmd.handler(payload, res);
+    helpCommand(payload, res)
 });
 
-app.listen(config('PORT'), err => {
+app.listen(config.PORT, err => {
     if (err) throw err;
 
-    console.log(`\n🚀  Starbot LIVES on PORT ${config('PORT')} 🚀`);
+    console.log(`\n🚀  Parkingbot lives on PORT ${config.PORT} 🚀`);
 
-    if (config('SLACK_TOKEN')) {
-        console.log(`🤖  beep boop: @starbot is real-time\n`);
-        bot.listen({token: config('SLACK_TOKEN')});
+    if (config.SLACK_TOKEN) {
+        console.log(`connected to RTM`);
+        bot.listen({token: config.SLACK_TOKEN});
     }
 });
 
