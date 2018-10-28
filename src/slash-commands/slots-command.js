@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const config = require('../config');
 
-const SlotsCommand = require('../slots-store');
+const SlotsStore = require('../slots-store');
 
 const PRIVATE_RESPONSE = [
     {
@@ -43,12 +43,12 @@ const handler = (payload, res) => {
     if (payload.command === '/slotsinfo') {
         sendMessage(payload, res, [
             {
-                text: 'Доступные места: ' + SlotsCommand.getAllSots().join(', '),
+                text: 'Доступные места: ' + SlotsStore.getAllSots().join(', '),
                 color: config.ADD_COLOR,
                 mrkdwn_in: ['text']
             },
             {
-                text: 'Свободные места: ' + SlotsCommand.getFreeSots().join(', '),
+                text: 'Свободные места: ' + SlotsStore.getFreeSots().join(', '),
                 color: config.FREE_COLOR,
                 mrkdwn_in: ['text']
             }
@@ -63,24 +63,24 @@ const handler = (payload, res) => {
 
     switch (payload.command) {
         case '/setslots':
-            SlotsCommand.setSlots(payload.text);
+            SlotsStore.setSlots(payload.text);
             break;
         case '/addslots':
-            SlotsCommand.addSlots(payload.text);
+            SlotsStore.addSlots(payload.text);
             break;
         case '/removeslots':
-            SlotsCommand.removeSlots(payload.text);
+            SlotsStore.removeSlots(payload.text);
             break;
     }
 
     sendMessage(payload, res, [
         {
-            text: 'Список доступных мест обновлен: ' + SlotsCommand.getAllSots().join(', '),
+            text: 'Список доступных мест обновлен: ' + SlotsStore.getAllSots().join(', '),
             color: config.ADD_COLOR,
             mrkdwn_in: ['text']
         },
         {
-            text: 'Свободные места: ' + SlotsCommand.getFreeSots().join(', '),
+            text: 'Свободные места: ' + SlotsStore.getFreeSots().join(', '),
             color: config.FREE_COLOR,
             mrkdwn_in: ['text']
         }

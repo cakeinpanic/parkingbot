@@ -1,5 +1,5 @@
 const config = require('./config');
-const SLOTS = require('./slots-store');
+const SlotsStore = require('./slots-store');
 const PING_URL = config.PING_URL;
 const http = require('http');
 
@@ -13,7 +13,7 @@ function startPing() {
 
         // in Russia its GMT+3
         if (hours === 21) {
-            SLOTS.resetFreeSLOTS();
+            SlotsStore.resetFreeSLOTS();
         }
     }, 300000);
 }

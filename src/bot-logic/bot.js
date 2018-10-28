@@ -4,7 +4,7 @@ const slack = require('slack');
 
 const _ = require('lodash');
 const config = require('../config');
-const SLOTS = require('../slots-store');
+const SlotsStore = require('../slots-store');
 
 const PRIVATE_RESPONSE = require('../slash-commands/slots-command').PRIVATE_RESPONSE;
 
@@ -63,8 +63,8 @@ function handleMessage(msg) {
         return;
     }
 
-    const changes = SLOTS.takeOrRemoveSlot(msg.text);
-    const freeSLots = SLOTS.getFreeSots();
+    const changes = SlotsStore.takeOrRemoveSlot(msg.text);
+    const freeSLots = SlotsStore.getFreeSots();
 
     if (!changes) {
         return;

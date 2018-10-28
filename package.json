@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./src",
     "notify": "node ./src/tasks/notify",
-    "test": "standard",
+    "test": "jest",
     "prettier": "prettier --write 'src/**/*.js'"
   },
   "pre-commit": {
